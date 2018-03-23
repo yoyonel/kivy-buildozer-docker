@@ -8,7 +8,8 @@
 #####################################
 
 ############ CONFIG ###########
-BRANCH='2.2-dev' # change to whichever you want
+# BRANCH='2.2-dev' # change to whichever you want
+BRANCH='master'
 
 # Install cymunk for kivent_cymunk
 pip install git+https://github.com/tito/cymunk
