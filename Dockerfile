@@ -34,7 +34,24 @@ RUN set -x \
     && pip install -U pip \
     && pip install -r /buildozer/requirements.txt
 
-ADD kivy_hello_world /buildozer/kivy_hello_world
+# KivEnt - CyMunk
+RUN set -x \
+    && apt update -qq \
+    && apt -y install libgl1-mesa-dev mesa-common-dev python-kivy \
+    && apt-get autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN set -x \
+    && pip install \
+        http://github.com/kivy/kivy/archive/master.zip \
+        git+https://github.com/tito/cymunk
+
+ADD kivent_install.sh /buildozer/kivent_install.sh
+RUN set -x \
+    && chmod +x /buildozer/kivent_install.sh \
+    && /buildozer/kivent_install.sh
+
 
 RUN set -x \
     && adduser buildozer --disabled-password --disabled-login \
@@ -42,13 +59,15 @@ RUN set -x \
 
 USER buildozer
 
+# ADD kivy_hello_world /buildozer/kivy_hello_world
+
 # download all needed android dependencies:
 # semble ne pas fonctionner (résoudre les dépendances de manières "persistantes")
-RUN set -x \
-    && cd /buildozer/kivy_hello_world \
-    && buildozer android release \
-    && cd .. \
-    && rm -rf kivy_hello_world
+# RUN set -x \
+#     && cd /buildozer/kivy_hello_world \
+#     && buildozer android release \
+#     && cd .. \
+#     && rm -rf kivy_hello_world
 
 VOLUME /buildozer/
 
