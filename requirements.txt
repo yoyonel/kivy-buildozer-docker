@@ -1,0 +1,21 @@
+# pip freeze from VM kivy/android
+
+appdirs==1.4.3
+buildozer==0.32
+colorama==0.3.9
+Cython==0.25.2
+defusedxml==0.4.1
+file-magic==0.3.0
+Jinja2==2.9.6
+MarkupSafe==1.0
+packaging==16.8
+pexpect==4.2.1
+ptyprocess==0.5.1
+pyliblzma==0.5.3
+pyparsing==2.2.0
+python-for-android==0.4
+sh==1.12.4
+six==1.10.0
+SOAPpy==0.12.22
+virtualenv==15.1.0
+wstools==0.4.3

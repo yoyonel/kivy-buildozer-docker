@@ -6,7 +6,7 @@ title = Hello World
 # (str) Package name
 package.name = kivy_hello_world
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
+package.domain = org.demo
 
 # (str) Source code where the main.py live
 source.dir = .

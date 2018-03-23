@@ -19,17 +19,20 @@ RUN set -x \
     && apt-get -y install \
         lib32stdc++6 lib32z1 lib32ncurses5 \
         build-essential \
-        python-pip unzip curl \
+        python-pip python-dev cython \
+        liblzma-dev \
+        unzip curl \
     && apt-get -y install git openjdk-8-jdk --no-install-recommends zlib1g-dev \
     && apt-get autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+ADD requirements.txt /buildozer/requirements.txt
+
 # The buildozer VM used Cython v0.25 and buildozer v0.32
 RUN set -x \
     && pip install -U pip \
-    && pip install "cython<0.26" \
-    && pip install "buildozer!=0.33" python-for-android pyOpenssl
+    && pip install -r /buildozer/requirements.txt
 
 ADD kivy_hello_world /buildozer/kivy_hello_world
 
@@ -39,7 +42,8 @@ RUN set -x \
 
 USER buildozer
 
-# download all needed andorid dependencies:
+# download all needed android dependencies:
+# semble ne pas fonctionner (résoudre les dépendances de manières "persistantes")
 RUN set -x \
     && cd /buildozer/kivy_hello_world \
     && buildozer android release \
