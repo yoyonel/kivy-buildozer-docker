@@ -1,6 +1,7 @@
-FROM ubuntu:17.10
+#FROM ubuntu:17.10
+FROM nvidia/cuda:9.1-runtime-ubuntu16.04
 
-MAINTAINER Jens Diemer "https://github.com/jedie/kivy-buildozer-docker"
+MAINTAINER ATTY Lionel "https://github.com/yoyonel/kivy-buildozer-docker"
 
 # Update ubuntu:
 RUN set -x \
@@ -21,16 +22,33 @@ RUN set -x \
         build-essential \
         python-pip python-dev cython \
         liblzma-dev \
-        unzip curl \
+        unzip curl wget \
     && apt-get -y install git openjdk-8-jdk --no-install-recommends zlib1g-dev \
     && apt-get autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# RUN set -x \
+#     && apt-get update -qq \
+#     && apt-get -y install \
+#         lib32stdc++6 lib32z1 lib32ncurses5 \
+#         build-essential \
+#         git openjdk-8-jdk --no-install-recommends zlib1g-dev \
+#         #
+#         python-pip python-dev cython \
+#         liblzma-dev \
+#         unzip curl wget \
+#     && apt-get autoremove \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 ADD requirements.txt /buildozer/requirements.txt
 
 # The buildozer VM used Cython v0.25 and buildozer v0.32
 RUN set -x \
+    && wget http://bootstrap.pypa.io/get-pip.py \
+    && python get-pip.py \
+    && rm get-pip.py \
     && pip install -U pip \
     && pip install -r /buildozer/requirements.txt
 
@@ -53,21 +71,21 @@ RUN set -x \
     && /buildozer/kivent_install.sh
 
 
+ADD kivy_hello_world /buildozer/kivy_hello_world
+
 RUN set -x \
     && adduser buildozer --disabled-password --disabled-login \
     && chown -R buildozer:buildozer /buildozer/
 
 USER buildozer
 
-# ADD kivy_hello_world /buildozer/kivy_hello_world
-
 # download all needed android dependencies:
 # semble ne pas fonctionner (résoudre les dépendances de manières "persistantes")
-# RUN set -x \
-#     && cd /buildozer/kivy_hello_world \
-#     && buildozer android release \
-#     && cd .. \
-#     && rm -rf kivy_hello_world
+RUN set -x \
+    && cd /buildozer/kivy_hello_world \
+    && buildozer android release \
+    && cd .. \
+    && rm -rf kivy_hello_world
 
 VOLUME /buildozer/
 
